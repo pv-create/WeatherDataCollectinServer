@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/Users/pavelvilkov/Desktop/projects/WeatherServer/Web/Web.csproj": {}
+    "/Users/pavelvilkov/Desktop/projects/WeatherDataServer/Web/Web.csproj": {}
   },
   "projects": {
-    "/Users/pavelvilkov/Desktop/projects/WeatherServer/Web/Web.csproj": {
+    "/Users/pavelvilkov/Desktop/projects/WeatherDataServer/Web/Web.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/Users/pavelvilkov/Desktop/projects/WeatherServer/Web/Web.csproj",
+        "projectUniqueName": "/Users/pavelvilkov/Desktop/projects/WeatherDataServer/Web/Web.csproj",
         "projectName": "Web",
-        "projectPath": "/Users/pavelvilkov/Desktop/projects/WeatherServer/Web/Web.csproj",
+        "projectPath": "/Users/pavelvilkov/Desktop/projects/WeatherDataServer/Web/Web.csproj",
         "packagesPath": "/Users/pavelvilkov/.nuget/packages/",
-        "outputPath": "/Users/pavelvilkov/Desktop/projects/WeatherServer/Web/obj/",
+        "outputPath": "/Users/pavelvilkov/Desktop/projects/WeatherDataServer/Web/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/Users/pavelvilkov/.nuget/NuGet/NuGet.Config"
@@ -42,6 +42,10 @@
             "MassTransit.RabbitMQ": {
               "target": "Package",
               "version": "[8.2.5, )"
+            },
+            "Microsoft.AspNetCore.SignalR.Client": {
+              "target": "Package",
+              "version": "[8.0.10, )"
             }
           },
           "imports": [
