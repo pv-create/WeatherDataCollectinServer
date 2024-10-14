@@ -23,6 +23,13 @@ export PATH="$HOME/.cargo/bin:$PATH"
 <li> подключаем датчик как <a href = "https://habrastorage.org/storage2/a84/bd3/77a/a84bd377a9ad2d3bbe7376a0b89418d0.jpg">тут</a> 
 </ul>
 
+## Технологии на веб части
+<ul>
+<li> Asp.net core MVC
+<li> SignalR
+<li> Mass Transit
+<ul>
+
 ## Поток данных
 После получения данных с датчика они пишутся в очередь RabitMq
 
@@ -44,4 +51,5 @@ NODE_PORT=5672
 <li> Разбить Web на слои
 <li> Добавить UI часть (попробовать сделать real-time)
 <li> Сконфигурировать логгирование при помощи serilog
+<li>Добавить графики
 </ul>
