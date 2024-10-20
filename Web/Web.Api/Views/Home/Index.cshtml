@@ -1,0 +1,114 @@
+﻿@{
+ViewData["Title"] = "Home Page";
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
+
+<style>
+    #chartContainer {
+        width: 80%;
+        height: 400px;
+        margin: auto;
+    }
+</style>
+
+<div id="weatherData">
+    <p>Temperature: <span id="temperature"></span>°C</p>
+    <p>Humidity: <span id="humidity"></span>%</p>
+</div>
+
+<table class="table table-striped table-hover">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">Temperature (°C)</th>
+        <th scope="col">Humidity (%)</th>
+        <th scope="col">Time</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in ViewBag.Data)
+    {
+    <tr>
+        <td>@item.TemperatureValue</td>
+        <td>@item.HumidityValue</td>
+        <td>@item.TimeEvent.ToString("yyyy-MM-dd HH:mm:ss")</td>
+    </tr>
+    }
+    </tbody>
+</table>
+
+<div id="chartContainer">
+    <canvas id="weatherChart"></canvas>
+</div>
+
+<script>
+    var connection = new signalR.HubConnectionBuilder().withUrl("/weatherHub").build();
+    var chart;
+
+    function initChart() {
+        console.log("Initializing chart");
+        var ctx = document.getElementById('weatherChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Temperature (°C)',
+                    data: [],
+                    borderColor: 'rgb(255, 99, 132)',
+                    tension: 0.1
+                }, {
+                    label: 'Humidity (%)',
+                    data: [],
+                    borderColor: 'rgb(54, 162, 235)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'minute'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    function addData(label, temperature, humidity) {
+        console.log("Adding data:", label, temperature, humidity);
+        chart.data.labels.push(label);
+        chart.data.datasets[0].data.push(temperature);
+        chart.data.datasets[1].data.push(humidity);
+
+        if (chart.data.labels.length > 20) {
+            chart.data.labels.shift();
+            chart.data.datasets[0].data.shift();
+            chart.data.datasets[1].data.shift();
+        }
+
+        chart.update();
+    }
+
+    connection.on("ReceiveWeatherData", function (data) {
+        console.log("Received data:", data);
+        document.getElementById("temperature").textContent = data.temperature.toFixed(1);
+        document.getElementById("humidity").textContent = data.humidity.toFixed(1);
+
+        var now = new Date();
+        addData(now, data.temperature, data.humidity);
+    });
+
+    connection.start().then(function () {
+        console.log("Connection started");
+        initChart();
+    }).catch(function (err) {
+        console.error("Error:", err.toString());
+    });
+</script>
