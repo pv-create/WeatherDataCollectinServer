@@ -27,6 +27,9 @@ export PATH="$HOME/.cargo/bin:$PATH"
 ## Добавление программы Rust в автозагрузку
 <pre>
 <code>
+# Создайте файл сервиса
+sudo nano /etc/systemd/system/TemperatureServer.service
+
 [Unit]
 Description=TemperatureServer
 After=network.target
@@ -35,12 +38,24 @@ After=network.target
 Type=simple
 User=property
 WorkingDirectory=/home/property/RustDht/dht22_project/target/debug
-ExecStart=/home/property/RustDht/dht22_project/target/debug/dht22_project
+ExecStart=/home/property/RustDht/dht22_project/target/debug/dht22_project   
 Restart=always
 RestartSec=3
 
 [Install]
 WantedBy=multi-user.target
+
+# Перезагрузите демон systemd
+sudo systemctl daemon-reload
+
+# Включите сервис
+sudo systemctl enable TemperatureServer
+
+# Запустите сервис
+sudo systemctl start TemperatureServer
+
+# Проверьте статус
+sudo systemctl status TemperatureServer
 </code>
 </pre>
 
