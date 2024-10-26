@@ -1,5 +1,6 @@
 using MassTransit;
 using Microsoft.OpenApi.Models;
+using Web.Configurations;
 using Web.Hubs;
 using Web.Infrustructure;
 using Web.Infrustructure.Repositories;
@@ -9,46 +10,21 @@ using Web.Services.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors();
 
-builder.Services.AddMassTransit(busConfigurator =>
-{
-    busConfigurator.SetKebabCaseEndpointNameFormatter();
-    busConfigurator.AddConsumer<RawWeatherDataConsumer>();
-
-    busConfigurator.UsingRabbitMq((context, configurtor) =>
-    {
-        configurtor.Host(new Uri(builder.Configuration["MessageBroker:Host"]!), h =>
-        {
-            h.Username(builder.Configuration["MessageBroker:Username"]!);
-            h.Password(builder.Configuration["MessageBroker:Password"]!);
-        });
-        
-        configurtor.ReceiveEndpoint("weather_data", e =>
-        {
-            e.Durable = false;
-            e.ClearSerialization();
-            e.UseRawJsonSerializer();
-            e.ConfigureConsumer<RawWeatherDataConsumer>(context);
-        });
-    });
-});
-
-builder.Services.AddSignalR();
+builder.AddMassTransit();
 
 builder.Services.AddTransient<IWeatherDataRepository, WeatherDataRepository>();
 builder.Services.AddTransient<IWeatherDataService, WeatherDataService>();
 builder.Services.AddDbContext<WeatherDbContext>();
 
+//Добавляем swagger
+builder.Services.AddSwaggerConfig();
+
+//Добавляем контроллеры
 builder.Services.AddControllers();
-
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "Your API Name", Version = "v1" });
-});
-
 builder.Services.AddControllersWithViews();
+builder.Services.AddSignalR();
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -70,7 +46,7 @@ app.UseRouting();
 app.UseCors(x => x
     .AllowAnyMethod()
     .AllowAnyHeader()
-    .SetIsOriginAllowed(origin => true) // allow any origin
+    .SetIsOriginAllowed(origin => true)
     .AllowCredentials()); 
 app.UseAuthorization();
 

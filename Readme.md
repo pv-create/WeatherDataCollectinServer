@@ -23,6 +23,27 @@ export PATH="$HOME/.cargo/bin:$PATH"
 <li> подключаем датчик как <a href = "https://habrastorage.org/storage2/a84/bd3/77a/a84bd377a9ad2d3bbe7376a0b89418d0.jpg">тут</a> 
 </ul>
 
+
+## Добавление программы Rust в автозагрузку
+<pre>
+<code>
+[Unit]
+Description=TemperatureServer
+After=network.target
+
+[Service]
+Type=simple
+User=property
+WorkingDirectory=/home/property/RustDht/dht22_project/target/debug
+ExecStart=/home/property/RustDht/dht22_project/target/debug/dht22_project
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
+</code>
+</pre>
+
 ## Технологии на веб части
 <ul>
 <li> Asp.net core MVC

@@ -16,9 +16,9 @@ namespace Web.API
             _weatherDataService = weatherDataService;
         }
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyCollection<WeatherData>>> GetTemperature()
+        public async Task<ActionResult<IReadOnlyCollection<WeatherData>>> GetTemperature(int count = 100)
         {
-            var dataResult = await _weatherDataService.GetWeatherDataAsync(10);
+            var dataResult = await _weatherDataService.GetWeatherDataAsync(count);
             
             return Ok(dataResult);
         }
